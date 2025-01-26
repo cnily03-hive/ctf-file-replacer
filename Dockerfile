@@ -1,4 +1,4 @@
-FROM oven/bun:1-slim AS builder
+FROM oven/bun:1-alpine AS builder
 
 WORKDIR /app
 COPY . .
@@ -6,10 +6,12 @@ COPY . .
 RUN bun install
 RUN bun run build
 
-FROM alpine:3
+FROM oven/bun:1-alpine
 
 ENV FLAG=flag{test_flag}
 ENV NODE_ENV=production
+
+RUN rm -rf /usr/local/bin/bun
 
 WORKDIR /app
 COPY --from=builder /app/dist/server /app/server

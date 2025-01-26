@@ -6,4 +6,4 @@ services:
     environment:
       FLAG: "flag{this_is_a_fake_flag}"
     ports:
-      - "5000:300"
+      - "3000:3000"

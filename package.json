@@ -4,17 +4,23 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start": "bun run index.ts",
-    "build": "bun build index.ts --compile --minify --bytecode --outfile dist/server",
-    "build:dev": "bun build index.ts --compile --sourcemap --outfile dist/server"
+    "start": "bun run ./src/index.ts",
+    "dev": "bun --watch run ./src/index.ts",
+    "build": "bun build ./src/index.ts --compile --minify --outfile dist/server",
+    "build:dev": "bun build ./src/index.ts --compile --sourcemap --outfile dist/server"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/bun": "^1.2.0"
+    "@types/bun": "latest",
+    "@types/html-minifier": "^4.0.5"
   },
   "dependencies": {
-    "html-minifier": "^4.0.0"
+    "html-minifier": "^4.0.0",
+    "path": "^0.12.7"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
   }
 }

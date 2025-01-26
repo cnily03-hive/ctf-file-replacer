@@ -30,10 +30,6 @@
             margin-bottom: 20px;
         }
 
-        .space {
-            width: 24px;
-        }
-
         .input {
             width: 100%;
             display: flex;
@@ -81,6 +77,7 @@
             color: #535760;
             border-bottom: 1px solid #535760;
             outline: none;
+            min-width: 24px;
         }
 
         .output {
@@ -92,10 +89,16 @@
             border-radius: 5px;
             font-size: 16px;
             white-space: pre-wrap;
+            word-break: break-word;
             height: 16rem;
             overflow-y: auto;
             font-size: 14px;
             font-family: 'Courier New', Courier, monospace;
+        }
+
+        .space {
+            display: block;
+            padding: 0 6px;
         }
 
         ::selection {
