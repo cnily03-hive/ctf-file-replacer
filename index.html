@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Replacer</title>
+    <style>
+        body {
+            display: grid;
+            place-items: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+
+        .box {
+            width: 500px;
+            max-width: 95vw;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .title {
+            width: 100%;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .space {
+            width: 24px;
+        }
+
+        .input {
+            width: 100%;
+            display: flex;
+        }
+
+        .input>* {
+            border: none;
+        }
+
+        .input>* {
+            padding: 10px 0;
+            border-top: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+            font-size: 16px;
+            white-space: nowrap;
+        }
+
+        .input [name="pattern"] {
+            max-width: 100%;
+            width: min-content;
+        }
+
+        .input [name="file"] {
+            width: 100%;
+        }
+
+        .input> :first-child {
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+            border-left: 1px solid #ccc;
+            padding-left: 10px;
+        }
+
+        .input> :last-child {
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+            border-right: 1px solid #ccc;
+            padding-right: 10px;
+        }
+
+        .input>input {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            user-select: none;
+            color: #535760;
+            border-bottom: 1px solid #535760;
+            outline: none;
+        }
+
+        .output {
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            white-space: pre-wrap;
+            height: 16rem;
+            overflow-y: auto;
+            font-size: 14px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        ::selection {
+            background-color: rgba(61, 170, 194, .25);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="title"><span>File Replacer</span></div>
+        <div class="input" id="input">
+            <span>sed</span>
+            <span class="space"></span>
+            <span>'s/{.*}/</span>
+            <input type="text" name="pattern" placeholder="Enter text to replace">
+            <span>/g'</span>
+            <span class="space"></span>
+            <input type="text" name="file" placeholder="Enter file path">
+        </div>
+        <div class="output" id="output">Press enter to execute.</div>
+    </div>
+    <script>
+        !function () {
+            let mutex = false;
+            const i = document.querySelectorAll('input')
+            const patternEl = document.querySelector('input[name="pattern"]');
+            const fileEl = document.querySelector('input[name="file"]');
+            const setOutput = (text) => {
+                document.querySelector('#output').innerText = text;
+            }
+            const debuffer = async (buf) => {
+                const arrayBuffer = new Uint8Array(buf).buffer;
+                return new TextDecoder().decode(arrayBuffer);
+            }
+            const tail = (s, c) => `${s}\nProcess exited with code ${c}.`;
+            i.forEach(el => el.addEventListener('keydown', function (e) {
+                if (e.keyCode !== 13) return;
+                if (mutex) return;
+                mutex = true;
+                fetch(window.location.href, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        pattern: patternEl.value,
+                        file: fileEl.value
+                    })
+                }).then(async res => {
+                    if (res.ok) {
+                        const json = await res.json();
+                        if (json.exit === 0) {
+                            setOutput(await debuffer(json.stdout), json.exit);
+                        } else {
+                            setOutput(tail(await debuffer(json.stderr), json.exit));
+                        }
+                    } else throw new Error(await res.text());
+                }).catch(err => {
+                    setOutput(err.message);
+                })
+            }));
+            i.forEach(el => el.addEventListener('keyup', function (e) {
+                if (e.keyCode !== 13) return;
+                mutex = false;
+            }));
+        }()
+    </script>
+</body>
+
+</html>

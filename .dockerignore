@@ -1,0 +1,14 @@
+docker-compose.yml
+Dockerfile
+.env
+.gitingore
+.gitmodules
+.git
+.github
+.vscode
+.editorconfig
+
+README.md
+
+/flag.txt
+/flag

@@ -1,0 +1,59 @@
+name: Docker
+
+on:
+  push:
+    branches:
+      - master
+      - main
+
+  pull_request:
+    branches:
+      - master
+      - main
+
+  workflow_dispatch:
+    inputs:
+      dockerfile:
+        description: 'Dockerfile'
+        required: true
+        default: 'Dockerfile'
+      context:
+        description: 'Build context'
+        required: true
+        default: '.'
+      image:
+        description: 'Docker image'
+        required: true
+        default: ctf-file-replacer:latest
+
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build image
+      run: |
+        echo "Building image ${{ inputs.image }}"
+        docker build -t '${{ inputs.image }}' -f '${{ inputs.dockerfile }}' '${{ inputs.context }}'
+
+    - name: Export image
+      id: export
+      run: |
+        echo "BUILD_ID=$(echo -n '${{ inputs.image }}' | tr -c '[:alnum:]' '_')" >> "$GITHUB_OUTPUT"
+        echo "BUILD_HASH=$(git rev-parse --short=16 HEAD)" >> "$GITHUB_OUTPUT"
+
+        mkdir -p output && cd output
+        docker save '${{ inputs.image }}' -o image.tar
+        echo "$(sha256sum image.tar | cut -d ' ' -f 1)" > image.tar.sha256
+        hash=$(md5sum image.tar | cut -d ' ' -f 1 | cut -c 9-24)
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: build_exports.docker.${{ steps.export.outputs.BUILD_ID }}.${{ steps.export.outputs.BUILD_HASH }}
+        path: output/
+        retention-days: 1

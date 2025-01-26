@@ -1,0 +1,19 @@
+{
+  "name": "ctf-file-replacer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "build": "bun build index.ts --compile --minify --bytecode --outfile dist/server",
+    "build:dev": "bun build index.ts --compile --sourcemap --outfile dist/server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/bun": "^1.2.0"
+  },
+  "dependencies": {
+    "html-minifier": "^4.0.0"
+  }
+}

@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    environment:
+      FLAG: "flag{this_is_a_fake_flag}"
+    ports:
+      - "5000:300"
