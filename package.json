@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
+    "start": "bun run index.ts",
     "build": "bun build index.ts --compile --minify --bytecode --outfile dist/server",
     "build:dev": "bun build index.ts --compile --sourcemap --outfile dist/server"
   },
