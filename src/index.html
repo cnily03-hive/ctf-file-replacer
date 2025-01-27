@@ -18,8 +18,8 @@
         .box {
             display: block;
             box-sizing: border-box;
-            width: 500px;
-            max-width: 95vw;
+            width: 648px;
+            max-width: 97vw;
             margin: 0 auto;
             padding: 20px;
         }
@@ -97,6 +97,14 @@
         ::selection {
             background-color: rgba(61, 170, 194, .25);
         }
+
+        .w-100 {
+            width: 100%;
+        }
+
+        .w-75 {
+            width: 75%;
+        }
     </style>
 </head>
 
@@ -107,10 +115,10 @@
             <span>sed</span>
             <span class="space"></span>
             <span>'s/{.*}/</span>
-            <input type="text" name="pattern" placeholder="Enter text to replace">
+            <input class="w-100" type="text" name="pattern" placeholder="replacement" value="truncated">
             <span>/g'</span>
             <span class="space"></span>
-            <input type="text" name="file" placeholder="Enter file path">
+            <input class="w-75" type="text" name="file" placeholder="file path" value="./example.txt">
         </div>
         <div class="output" id="output">Press enter to execute.</div>
     </div>
@@ -127,7 +135,7 @@
                 const arrayBuffer = new Uint8Array(buf).buffer;
                 return new TextDecoder().decode(arrayBuffer);
             }
-            const tail = (s, c) => `${s}\nProcess exited with code ${c}.`;
+            const tail = (s, t) => `${s}${s.endsWith('\n') ? '' : '\n'}\n${t}`;
             i.forEach(el => el.addEventListener('keydown', function (e) {
                 if (e.keyCode !== 13) return;
                 if (mutex) return;
@@ -147,9 +155,9 @@
                         if (json.exit === 0) {
                             setOutput(await debuffer(json.stdout), json.exit);
                         } else {
-                            setOutput(tail(await debuffer(json.stderr), json.exit));
+                            setOutput(tail(await debuffer(json.stderr), `Process exited with code ${json.exit}.`));
                         }
-                    } else throw new Error(await res.text());
+                    } else throw new Error(tail(await res.text(), `Server responded with status ${res.status}.`));
                 }).catch(err => {
                     setOutput(err.message);
                 })

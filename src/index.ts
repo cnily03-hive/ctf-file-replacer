@@ -1,4 +1,4 @@
-#!/usr/bin/env -S bun run
+#!/usr/bin/env bun
 import { $ } from 'bun';
 import { readAndMinifyHTML } from './macro' with { type: 'macro' };
 

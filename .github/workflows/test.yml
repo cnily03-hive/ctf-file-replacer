@@ -23,6 +23,21 @@ jobs:
       run: |
         timeout 5s bun run start || if [ $? -eq 124 ]; then exit 0; else exit 1; fi
 
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: oven-sh/setup-bun@v2
+
+    - name: Install dependencies
+      run: bun install
+
+    - name: Build
+      run: bun run build
+
   compile:
     name: Compile
     runs-on: ubuntu-latest
@@ -35,5 +50,5 @@ jobs:
     - name: Install dependencies
       run: bun install
 
-    - name: Test Compile
-      run: bun run build
+    - name: Compile
+      run: bun run compile

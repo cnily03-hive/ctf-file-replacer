@@ -1,0 +1,7 @@
+Hello World!
+
+As you can see, something are replaced.
+
+==> {nothing}
+
+This is only an example.

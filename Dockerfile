@@ -11,11 +11,15 @@ FROM oven/bun:1-alpine
 ENV FLAG=flag{test_flag}
 ENV NODE_ENV=production
 
-RUN rm -rf /usr/local/bin/bun
+RUN adduser -D -h /home/ctf -s /bin/sh ctf
+WORKDIR /home/ctf
 
-WORKDIR /app
-COPY --from=builder /app/dist/server /app/server
+COPY --from=builder /app/example.txt /home/ctf/example.txt
+COPY --from=builder /app/dist/index.js /usr/local/bin/ctf-server
+RUN chmod +x /usr/local/bin/ctf-server
 
-CMD ["./server"]
+USER ctf
+
+CMD ["/usr/local/bin/ctf-server"]
 
 EXPOSE 3000

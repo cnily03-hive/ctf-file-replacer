@@ -6,8 +6,10 @@
   "scripts": {
     "start": "bun run ./src/index.ts",
     "dev": "bun --watch run ./src/index.ts",
-    "build": "bun build ./src/index.ts --compile --minify --outfile dist/server",
-    "build:dev": "bun build ./src/index.ts --compile --sourcemap --outfile dist/server"
+    "compile": "bun build ./src/index.ts --compile --minify --outfile dist/server",
+    "compile:dev": "bun build ./src/index.ts --compile --sourcemap --outfile dist/server",
+    "build": "bun build ./src/index.ts --target bun --minify --outdir dist/",
+    "build:dev": "bun build ./src/index.ts --target bun --sourcemap --outdir dist/"
   },
   "keywords": [],
   "author": "",

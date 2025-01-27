@@ -8,6 +8,8 @@ Dockerfile
 .vscode
 .editorconfig
 
+node_modules/
+
 README.md
 
 /flag.txt
