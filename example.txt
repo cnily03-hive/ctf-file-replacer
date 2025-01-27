@@ -1,7 +1,15 @@
-Hello World!
+Welcome to challenge!
 
-As you can see, something are replaced.
+As you can see, charactors between the curly brackets are replaced.
+
+Given the following text:
+
+==> <left bucket> nothing <right bucket>
+
+`<...>` are just placeholders.
+
+Replace as the command says and it produces:
 
 ==> {nothing}
 
-This is only an example.
+Note that this is only an example.
